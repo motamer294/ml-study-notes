@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linear Algebra Cheat Sheet </title>
+<link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #05192D;
+    --navy-mid: #0a2540;
+    --teal: #03EF62;
+    --teal-dim: #00c94f;
+    --white: #ffffff;
+    --off-white: #f4f7fa;
+    --gray-light: #e8edf3;
+    --gray-mid: #c0cdd9;
+    --gray-text: #6b8299;
+    --accent-blue: #05a8e6;
+    --accent-orange: #f5832a;
+    --accent-purple: #7c5cbf;
+    --accent-red: #e84855;
+    --border: rgba(3,239,98,0.18);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--navy);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--white);
+    width: 1400px;
+    margin: 0 auto;
+    padding: 48px 52px 60px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 36px;
+    padding-bottom: 24px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo-icon {
+    width: 38px; height: 38px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .logo-text {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--white);
+  }
+
+  .header-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-text);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-align: right;
+  }
+
+  .main-title {
+    font-size: 42px;
+    font-weight: 700;
+    letter-spacing: -1.5px;
+    line-height: 1.1;
+    margin-bottom: 6px;
+  }
+
+  .main-title span { color: var(--teal); }
+
+  .subtitle {
+    font-size: 14px;
+    color: var(--gray-text);
+    font-weight: 400;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── GRID ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 32px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--navy-mid);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 14px;
+    padding: 22px 24px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    border-radius: 14px 14px 0 0;
+  }
+
+  .card.c-teal::before    { background: var(--teal); }
+  .card.c-blue::before    { background: var(--accent-blue); }
+  .card.c-orange::before  { background: var(--accent-orange); }
+  .card.c-purple::before  { background: var(--accent-purple); }
+  .card.c-red::before     { background: var(--accent-red); }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .chapter-badge {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gray-text);
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    padding: 3px 7px;
+    white-space: nowrap;
+    margin-top: 3px;
+  }
+
+  .card-title {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    line-height: 1.25;
+    color: var(--white);
+  }
+
+  .card-title .accent { }
+  .c-teal .card-title .accent    { color: var(--teal); }
+  .c-blue .card-title .accent    { color: var(--accent-blue); }
+  .c-orange .card-title .accent  { color: var(--accent-orange); }
+  .c-purple .card-title .accent  { color: var(--accent-purple); }
+  .c-red .card-title .accent     { color: var(--accent-red); }
+
+  hr.divider {
+    border: none;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    margin: 12px 0;
+  }
+
+  .definition {
+    font-size: 12.5px;
+    color: #9ab0c5;
+    line-height: 1.65;
+    margin-bottom: 12px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    color: var(--gray-text);
+    margin-bottom: 7px;
+    margin-top: 14px;
+  }
+
+  .key-points {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .key-points li {
+    font-size: 12px;
+    color: #b8cfe0;
+    line-height: 1.5;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+
+  .key-points li::before {
+    content: '▸';
+    font-size: 10px;
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+  .c-teal .key-points li::before    { color: var(--teal); }
+  .c-blue .key-points li::before    { color: var(--accent-blue); }
+  .c-orange .key-points li::before  { color: var(--accent-orange); }
+  .c-purple .key-points li::before  { color: var(--accent-purple); }
+  .c-red .key-points li::before     { color: var(--accent-red); }
+
+  .formula-box {
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-top: 12px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--gray-light);
+    line-height: 1.8;
+    border-left: 3px solid rgba(255,255,255,0.1);
+  }
+
+  .c-teal .formula-box   { border-left-color: var(--teal); }
+  .c-blue .formula-box   { border-left-color: var(--accent-blue); }
+  .c-orange .formula-box { border-left-color: var(--accent-orange); }
+  .c-purple .formula-box { border-left-color: var(--accent-purple); }
+  .c-red .formula-box    { border-left-color: var(--accent-red); }
+
+  .formula-box .hi { color: var(--white); font-weight: 600; }
+  .c-teal .formula-box .hi   { color: var(--teal); }
+  .c-blue .formula-box .hi   { color: var(--accent-blue); }
+  .c-orange .formula-box .hi { color: var(--accent-orange); }
+  .c-purple .formula-box .hi { color: var(--accent-purple); }
+  .c-red .formula-box .hi    { color: var(--accent-red); }
+
+  /* ── WIDE CARD spanning 2 cols ── */
+  .span2 { grid-column: span 2; }
+
+  /* ── FOOTER ── */
+  .footer {
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-note {
+    font-size: 11px;
+    color: var(--gray-text);
+    letter-spacing: 0.5px;
+  }
+
+  .footer-badge {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--teal);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  /* tag chips */
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+  .tag {
+    font-size: 10.5px;
+    font-weight: 500;
+    padding: 3px 9px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.06);
+    color: #9ab0c5;
+    letter-spacing: 0.3px;
+  }
+
+  @media print {
+    body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<div class="header">
+  <div class="logo-area">
+    <div class="logo-icon">
+      <!-- DataCamp-style D-arrow logo recreated in SVG -->
+      <svg viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M8 7 L8 31 Q8 31 18 24 L26 19 L18 14 Z" fill="#03EF62"/>
+        <path d="M20 5 L28 10 L28 28 L20 33" stroke="#03EF62" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div>
+      <div class="logo-text">datacamp</div>
+      <div style="font-size:11px;color:var(--gray-text);letter-spacing:0.5px;">Cheat Sheet</div>
+    </div>
+  </div>
+  <div>
+    <div class="main-title">Linear <span>Algebra</span></div>
+    <div class="subtitle">Essence of Linear Algebra · Chapters 1–14 · 3Blue1Brown</div>
+  </div>
+  <div class="header-title">Quick<br>Reference</div>
+</div>
+
+<!-- ── GRID ── -->
+<div class="grid">
+
+  <!-- CH1: Vectors -->
+  <div class="card c-teal">
+    <div class="card-header">
+      <div>
+        <span class="chapter-badge">Ch. 1</span>
+        <div class="card-title">🧭 <span class="accent">Vectors</span></div>
+      </div>
+    </div>
+    <hr class="divider">
+    <p class="definition">A vector is an ordered list of numbers representing a point or direction in space. In 2D: <strong>[x, y]</strong>. Think of it as an arrow from the origin.</p>
+    <div class="section-label">Key Concepts</div>
+    <ul class="key-points">
+      <li>Vectors have <strong>magnitude</strong> (length) and <strong>direction</strong></li>
+      <li><strong>Addition</strong>: tip-to-tail — move along first then second vector</li>
+      <li><strong>Scalar multiplication</strong>: stretch, shrink, or flip the vector</li>
+      <li>Each coordinate is how far you move along each axis</li>
+    </ul>
+    <div class="formula-box">
+      <span class="hi">v = [x, y]</span><br>
+      |v| = √(x² + y²)  ← magnitude<br>
+      <span class="hi">v + w</span> = [x₁+x₂, y₁+y₂]<br>
+      c · v = [cx, cy]
+    </div>
+  </div>
+
+  <!-- CH2: Span & Basis -->
+  <div class="card c-blue">
+    <div class="card-header">
+      <div>
+        <span class="chapter-badge">Ch. 2</span>
+        <div class="card-title">🌐 <span class="accent">Span, Basis</span> & Linear Combos</div>
+      </div>
+    </div>
+    <hr class="divider">
+    <p class="definition">A linear combination scales and adds vectors together. The <strong>span</strong> is all reachable points. <strong>Basis vectors</strong> are the fundamental building blocks of a space.</p>
+    <div class="section-label">Key Concepts</div>
+    <ul class="key-points">
+      <li><strong>Linear combination</strong>: a·v + b·w for any scalars a, b</li>
+      <li><strong>Span</strong>: the set of all possible linear combinations</li>
+      <li>Standard basis: î = [1,0], ĵ = [0,1]</li>
+      <li><strong>Linearly dependent</strong>: one vector lies in span of others (redundant)</li>
+      <li><strong>Basis</strong>: minimal set of linearly independent spanning vectors</li>
+    </ul>
+    <div class="formula-box">
+      Linear combo: <span class="hi">a·î + b·ĵ</span><br>
+      Span(v,w) = {av + bw | a,b ∈ ℝ}<br>
+      Basis of ℝ² = {î, ĵ} = {[1,0],[0,1]}
+    </div>
+  </div>
+
+  <!-- CH3: Transformations -->
+  <div class="card c-orange">
+    <div class="card-header">
+      <div>
+        <span class="chapter-badge">Ch. 3</span>
+        <div class="card-title">🔄 <span class="accent">Linear Transformations</span> & Matrices</div>
+      </div>
+    </div>
+    <hr class="divider">
+    <p class="definition">A linear transformation is a function that moves vectors while keeping grid lines parallel and evenly spaced, and the origin fixed. Every such transformation is fully described by a <strong>matrix</strong>.</p>
+    <div class="section-label">Key Concepts</div>
+    <ul class="key-points">
+      <li>A matrix <strong>encodes where î and ĵ land</strong> after transformation</li>
+      <li>Apply transformation: multiply matrix by vector</li>
+      <li>Must satisfy: T(v+w)=T(v)+T(w) and T(cv)=cT(v)</li>
+    </ul>
+    <div class="formula-box">
+      M = [[a, b], [c, d]]<br>
+      <span class="hi">M · v</span> = [ax+by, cx+dy]<br>
+      Columns = where î, ĵ land
+    </div>
+    <div class="tags">
+      <span class="tag">rotation</span><span class="tag">shear</span><span class="tag">scale</span><span class="tag">projection</span>
+    </div>
+  </div>
+
+  <!-- CH4: Matrix Multiplication -->
+  <div class="card c-purple">
+    <div class="card-header">
+      <div>
+        <span class="chapter-badge">Ch. 4</span>
+        <div class="card-title">🔗 <span class="accent">Matrix Multiplication</span> as Composition</div>
+      </div>
+    </div>
+    <hr class="divider">
+    <p class="definition">Multiplying two matrices is the same as applying one transformation <em>then</em> another. Order matters — read right-to-left: <strong>AB</strong> means "first B, then A."</p>
+    <div class="section-label">Key Concepts</div>
+    <ul class="key-points">
+      <li>AB ≠ BA in general (non-commutative)</li>
+      <li>Each column of AB = A applied to that column of B</li>
+      <li>Associative: (AB)C = A(BC) ✓</li>
+      <li>Each result entry = dot product of a row with a column</li>
+    </ul>
+    <div class="formula-box">
+      (AB)ᵢⱼ = <span class="hi">Σₖ Aᵢₖ · Bₖⱼ</span><br>
+      2×2 example:<br>
+      [[a,b],[c,d]]·[[e,f],[g,h]]<br>
+      = [[ae+bg, af+bh],[ce+dg, cf+dh]]
+    </div>
+  </div>
+
+  <!-- CH5: 3D Transformations -->
+  <div class="card c-teal">
+    <div class="card-header">
+      <div>
+        <span class="chapter-badge">Ch. 5</span>
+        <div class="card-title">🧊 <span class="accent">3D Linear</span> Transformations</div>
+      </div>
+    </div>
+    <hr class="divider">
+    <p class="definition">The same ideas extend to 3D. A 3×3 matrix tracks where the three basis vectors <strong>î, ĵ, k̂</strong> land, encoding any rotation, scale, or shear in 3D space.</p>
+    <div class="section-label">Key Concepts</div>
+    <ul class="key-points">
+      <li>3D basis: î=[1,0,0], ĵ=[0,1,0], k̂=[0,0,1]</li>
+      <li>3×3 matrix = three column vectors showing new positions</li>
+      <li>Right-hand rule determines rotation direction</li>
+      <li>Composition still works: multiply 3×3 matrices</li>
+    </ul>
+    <div class="formula-box">
+      <span class="hi">M·v</span> where M is 3×3, v is [x,y,z]<br>
+      Rotation X: [[1,0,0],[0,cosθ,-sinθ],[0,sinθ,cosθ]]
+    </div>
+  </div>
+
+  <!-- CH6: Determinant -->
+  <div class="card c-red">
+    <div class="card-header">
+      <div>
+        <span class="chapter-badge">Ch. 6</span>
+        <div class="card-title">📐 <span class="accent">The Determinant</span></div>
+      </div>
+    </div>
+    <hr class="divider">
+    <p class="definition">The determinant measures how much a transformation <strong>scales area</strong> (2D) or <strong>volume</strong> (3D). A negative det means orientation is flipped. Zero det means the space is squished flat.</p>
+    <div class="section-label">Key Concepts</div>
+    <ul class="key-points">
+      <li>det = 0 → transformation squishes to lower dimension (singular!)</li>
+      <li>|det| = scale factor of area/volume</li>
+      <li>Negative det = orientation flipped (mirror image)</li>
+      <li>det(AB) = det(A) · det(B)</li>
+    </ul>
+    <div class="formula-box">
+      2×2: <span class="hi">det([[a,b],[c,d]]) = ad - bc</span><br>
+      3×3: expansion along first row<br>
+      det(I) = 1  |  det(flip) = -1
+    </div>
+  </div>
+
+  <!-- CH7: Inverse, Column space, Null space — WIDE -->
+  <div class="card c-blue span2">
+    <div class="card-header">
+      <div>
+        <span class="chapter-badge">Ch. 7</span>
+        <div class="card-title">🔍 <span class="accent">Inverse Matrices</span>, Column Space & Null Space</div>
+      </div>
+    </div>
+    <hr class="divider">
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;">
+      <div>
+        <div class="section-label">Inverse Matrix A⁻¹</div>
+        <p class="definition" style="margin:0 0 8px">Undoes a transformation. A⁻¹A = I. Exists only when det ≠ 0. Solves Ax = b as x = A⁻¹b.</p>
+        <div class="formula-box">
+          A·A⁻¹ = <span class="hi">I</span><br>
+          2×2: A⁻¹ = <span class="hi">1/det · [[d,-b],[-c,a]]</span>
+        </div>
+      </div>
+      <div>
+        <div class="section-label">Column Space</div>
+        <p class="definition" style="margin:0 0 8px">All possible outputs of Ax — the "span" of the columns. The solution to Ax=b exists only if b is in the column space.</p>
+        <div class="formula-box">
+          Col(A) = {Ax | x ∈ ℝⁿ}<br>
+          <span class="hi">rank</span> = dim of column space<br>
+          Full rank → invertible
+        </div>
+      </div>
+      <div>
+        <div class="section-label">Null Space (Kernel)</div>
+        <p class="definition" style="margin:0 0 8px">All vectors that get squished to zero by A. Captures "lost" information in the transformation. Non-trivial null space → not invertible.</p>
+        <div class="formula-box">
+          Null(A) = {x | <span class="hi">Ax = 0</span>}<br>
+          rank + nullity = n<br>
+          (rank-nullity theorem)
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CH8: Nonsquare -->
+  <div class="card c-orange">
+    <div class="card-header">
+      <div>
+        <span class="chapter-badge">Ch. 8</span>
+        <div class="card-title">↔️ <span class="accent">Nonsquare</span> Matrices</div>
+      </div>
+    </div>
+    <hr class="divider">
+    <p class="definition">A nonsquare matrix maps between spaces of <strong>different dimensions</strong>. A 3×2 matrix maps 2D → 3D; a 2×3 maps 3D → 2D (like a projection).</p>
+    <div class="section-label">Key Concepts</div>
+    <ul class="key-points">
+      <li><strong>m×n matrix</strong>: maps n-dim input → m-dim output</li>
+      <li>Columns still = where each basis vector lands</li>
+      <li>Cannot be invertible (dimensions don't match)</li>
+      <li>Useful for projections, encodings, embeddings</li>
+    </ul>
+    <div class="formula-box">
+      <span class="hi">3×2 matrix</span>: ℝ² → ℝ³<br>
+      <span class="hi">2×3 matrix</span>: ℝ³ → ℝ²<br>
+      columns = # inputs | rows = # outputs
+    </div>
+  </div>
+
+  <!-- CH9: Dot products -->
+  <div class="card c-teal">
+    <div class="card-header">
+      <div>
+        <span class="chapter-badge">Ch. 9</span>
+        <div class="card-title">·  <span class="accent">Dot Products</span> & Duality</div>
+      </div>
+    </div>
+    <hr class="divider">
+    <p class="definition">The dot product measures how much two vectors point in the same direction. It equals the product of their magnitudes and the cosine of the angle between them.</p>
+    <div class="section-label">Key Concepts</div>
+    <ul class="key-points">
+      <li>Geometric: <strong>v·w = |v||w|cosθ</strong></li>
+      <li>Algebraic: sum of element-wise products</li>
+      <li>v·w > 0 → same direction; < 0 → opposite; = 0 → perpendicular</li>
+      <li><strong>Duality</strong>: dot product ↔ 1×n matrix (linear functional)</li>
+    </ul>
+    <div class="formula-box">
+      <span class="hi">v·w</span> = x₁x₂ + y₁y₂ (+ z₁z₂ in 3D)<br>
+      = |v||w|cosθ<br>
+      Projection of w onto v: (v·w)/|v|
+    </div>
+  </div>
+
+  <!-- CH14: Eigenvalues — WIDE -->
+  <div class="card c-purple span2">
+    <div class="card-header">
+      <div>
+        <span class="chapter-badge">Ch. 14</span>
+        <div class="card-title">λ  <span class="accent">Eigenvectors</span> & <span class="accent">Eigenvalues</span></div>
+      </div>
+    </div>
+    <hr class="divider">
+    <p class="definition">An <strong>eigenvector</strong> is a special vector that only gets scaled (not rotated) by a transformation. The <strong>eigenvalue</strong> λ is how much it gets scaled. These reveal the "essence" of a matrix — the axes around which it truly acts.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:18px;margin-top:8px;">
+      <div>
+        <div class="section-label">Definition</div>
+        <ul class="key-points">
+          <li>Av = λv — vector stays on its span</li>
+          <li>λ can be negative (flip), 0 (squish to origin), or complex</li>
+          <li>Each eigenvalue may have multiple eigenvectors (eigenspace)</li>
+        </ul>
+      </div>
+      <div>
+        <div class="section-label">How to Find Them</div>
+        <div class="formula-box">
+          <span class="hi">det(A - λI) = 0</span>  ← characteristic eq.<br>
+          Solve for λ (eigenvalues)<br>
+          Then: (A - λI)v = 0 → eigenvectors
+        </div>
+      </div>
+      <div>
+        <div class="section-label">Why They Matter</div>
+        <ul class="key-points">
+          <li>Diagonalization: A = PDP⁻¹ (P = eigenvectors)</li>
+          <li>Stable axes in 3D rotations</li>
+          <li>PCA, PageRank, quantum states, vibrations</li>
+          <li>Powers of A: Aⁿ = PDⁿP⁻¹ (easy!)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Reference Summary -->
+  <div class="card c-red">
+    <div class="card-header">
+      <div>
+        <span class="chapter-badge">All Chapters</span>
+        <div class="card-title">⚡ <span class="accent">Quick Reference</span> Summary</div>
+      </div>
+    </div>
+    <hr class="divider">
+    <ul class="key-points">
+      <li><strong>Vector</strong>: arrow with magnitude & direction</li>
+      <li><strong>Span</strong>: all reachable linear combos</li>
+      <li><strong>Matrix</strong>: encodes a linear transformation</li>
+      <li><strong>Matrix mult.</strong>: composition of transforms</li>
+      <li><strong>Determinant</strong>: area/volume scale factor</li>
+      <li><strong>Inverse</strong>: undoes a transformation</li>
+      <li><strong>Col. space</strong>: all possible outputs</li>
+      <li><strong>Null space</strong>: all inputs → zero</li>
+      <li><strong>Dot product</strong>: alignment between vectors</li>
+      <li><strong>Eigenvector</strong>: direction unchanged by transform</li>
+      <li><strong>Eigenvalue</strong>: scale factor along eigenvector</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-note">Based on <em>Essence of Linear Algebra</em> by 3Blue1Brown · Chapters 1–14</div>
+  <div class="footer-badge"> · linear algebra cheat sheet</div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PCA Cheat Sheet – DataCamp</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #05192D;
+    --navy-mid: #0a2540;
+    --navy-card: #0d2a45;
+    --teal: #03EF62;
+    --white: #ffffff;
+    --gray-text: #6b8299;
+    --gray-body: #9ab0c5;
+    --gray-light: #b8cfe0;
+    --border: rgba(3,239,98,0.15);
+    --c1: #03EF62;
+    --c2: #05a8e6;
+    --c3: #f5832a;
+    --c4: #7c5cbf;
+    --c5: #e84855;
+    --c6: #00d4aa;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--navy);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--white);
+    width: 1440px;
+    margin: 0 auto;
+    padding: 46px 52px 60px;
+  }
+
+  /* HEADER */
+  .header {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    padding-bottom: 22px; border-bottom: 2px solid var(--border); margin-bottom: 30px;
+  }
+  .logo-wrap { display:flex; align-items:center; gap:12px; }
+  .logo-text { font-size:20px; font-weight:700; letter-spacing:-0.5px; }
+  .logo-sub  { font-size:11px; color:var(--gray-text); letter-spacing:0.5px; }
+  .title-block { text-align:center; }
+  .main-title  { font-size:44px; font-weight:700; letter-spacing:-2px; line-height:1.05; }
+  .main-title .hi { color:var(--teal); }
+  .main-sub { font-size:13px; color:var(--gray-text); margin-top:4px; letter-spacing:0.3px; }
+  .header-right { text-align:right; }
+  .hr-tag { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--teal); }
+  .hr-sub { font-size:11px; color:var(--gray-text); margin-top:3px; }
+
+  /* SECTION HEADERS */
+  .section-header { display:flex; align-items:center; gap:12px; margin:26px 0 14px; }
+  .sh-line { flex:1; height:1px; background:rgba(255,255,255,0.07); }
+  .sh-label {
+    font-size:11px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+    padding:4px 14px; border-radius:20px; white-space:nowrap;
+  }
+  .sh-c1 { background:rgba(3,239,98,0.1);   color:var(--c1); }
+  .sh-c2 { background:rgba(5,168,230,0.1);  color:var(--c2); }
+  .sh-c3 { background:rgba(245,131,42,0.1); color:var(--c3); }
+  .sh-c4 { background:rgba(124,92,191,0.1); color:var(--c4); }
+  .sh-c5 { background:rgba(232,72,85,0.1);  color:var(--c5); }
+  .sh-c6 { background:rgba(0,212,170,0.1);  color:var(--c6); }
+
+  /* GRIDS */
+  .grid2 { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .grid4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .span2 { grid-column:span 2; }
+  .span3 { grid-column:span 3; }
+  .span4 { grid-column:span 4; }
+
+  /* CARD */
+  .card {
+    background: var(--navy-card);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 13px; padding: 18px 20px 20px;
+    position: relative; overflow: hidden;
+  }
+  .card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:3px; border-radius:13px 13px 0 0;
+  }
+  .card.c1::before { background:var(--c1); }
+  .card.c2::before { background:var(--c2); }
+  .card.c3::before { background:var(--c3); }
+  .card.c4::before { background:var(--c4); }
+  .card.c5::before { background:var(--c5); }
+  .card.c6::before { background:var(--c6); }
+
+  .card-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:10px; }
+  .badge {
+    font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;
+    padding:3px 8px; border-radius:4px; background:rgba(255,255,255,0.05); color:var(--gray-text);
+  }
+  .tag-chip {
+    font-size:10px; font-weight:600; padding:3px 9px; border-radius:10px;
+  }
+  .card.c1 .tag-chip { background:rgba(3,239,98,0.12);   color:var(--c1); }
+  .card.c2 .tag-chip { background:rgba(5,168,230,0.12);  color:var(--c2); }
+  .card.c3 .tag-chip { background:rgba(245,131,42,0.12); color:var(--c3); }
+  .card.c4 .tag-chip { background:rgba(124,92,191,0.12); color:var(--c4); }
+  .card.c5 .tag-chip { background:rgba(232,72,85,0.12);  color:var(--c5); }
+  .card.c6 .tag-chip { background:rgba(0,212,170,0.12);  color:var(--c6); }
+
+  .card-title { font-size:14px; font-weight:700; letter-spacing:-0.3px; line-height:1.3; color:var(--white); margin-bottom:8px; }
+  .card.c1 .accent { color:var(--c1); }
+  .card.c2 .accent { color:var(--c2); }
+  .card.c3 .accent { color:var(--c3); }
+  .card.c4 .accent { color:var(--c4); }
+  .card.c5 .accent { color:var(--c5); }
+  .card.c6 .accent { color:var(--c6); }
+
+  hr.div { border:none; border-top:1px solid rgba(255,255,255,0.06); margin:10px 0; }
+  .def { font-size:12px; color:var(--gray-body); line-height:1.65; margin-bottom:8px; }
+  .sl { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gray-text); margin:10px 0 6px; }
+
+  .pts { list-style:none; display:flex; flex-direction:column; gap:5px; }
+  .pts li { font-size:11.5px; color:var(--gray-light); line-height:1.5; display:flex; gap:7px; align-items:flex-start; }
+  .pts li::before { content:'▸'; font-size:9px; margin-top:3px; flex-shrink:0; }
+  .card.c1 .pts li::before { color:var(--c1); }
+  .card.c2 .pts li::before { color:var(--c2); }
+  .card.c3 .pts li::before { color:var(--c3); }
+  .card.c4 .pts li::before { color:var(--c4); }
+  .card.c5 .pts li::before { color:var(--c5); }
+  .card.c6 .pts li::before { color:var(--c6); }
+
+  /* CODE BLOCK */
+  .fbox {
+    background: rgba(0,0,0,0.35); border-radius:9px; padding:11px 14px;
+    margin-top:10px; font-family:'DM Mono',monospace; font-size:11.5px;
+    color: #8bafc8; line-height:1.9;
+  }
+  .card.c1 .fbox { border-left:3px solid var(--c1); }
+  .card.c2 .fbox { border-left:3px solid var(--c2); }
+  .card.c3 .fbox { border-left:3px solid var(--c3); }
+  .card.c4 .fbox { border-left:3px solid var(--c4); }
+  .card.c5 .fbox { border-left:3px solid var(--c5); }
+  .card.c6 .fbox { border-left:3px solid var(--c6); }
+
+  /* syntax colors */
+  .kw  { color:#05a8e6; }   /* keyword: import, from, def */
+  .fn  { color:#f5832a; }   /* function name */
+  .cl  { color:#e8b84b; }   /* class name */
+  .st  { color:#a8cc8c; }   /* string */
+  .cm  { color:#4a6a7c; font-style:italic; }  /* comment */
+  .nm  { color:#ce9178; }   /* number */
+  .hi  { color:var(--white); font-weight:600; }
+  .card.c1 .hi { color:var(--c1); }
+  .card.c2 .hi { color:var(--c2); }
+  .card.c3 .hi { color:var(--c3); }
+  .card.c4 .hi { color:var(--c4); }
+  .card.c5 .hi { color:var(--c5); }
+  .card.c6 .hi { color:var(--c6); }
+
+  /* math formula box */
+  .mbox {
+    background:rgba(255,255,255,0.03); border-radius:8px; padding:9px 13px;
+    margin-top:10px; font-family:'DM Mono',monospace; font-size:11.5px;
+    color:var(--gray-light); line-height:1.85; border:1px solid rgba(255,255,255,0.06);
+  }
+
+  /* step list */
+  .steps { display:flex; flex-direction:column; gap:8px; margin-top:8px; }
+  .step { display:flex; gap:10px; align-items:flex-start; }
+  .step-num {
+    width:20px; height:20px; border-radius:50%; display:flex; align-items:center;
+    justify-content:center; font-size:10px; font-weight:700; flex-shrink:0; margin-top:1px;
+  }
+  .card.c2 .step-num { background:rgba(5,168,230,0.2); color:var(--c2); }
+  .card.c3 .step-num { background:rgba(245,131,42,0.2); color:var(--c3); }
+  .step-text { font-size:12px; color:var(--gray-light); line-height:1.55; }
+  .step-text strong { color:var(--white); }
+
+  /* inner grids */
+  .inner2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:8px; }
+  .inner3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-top:8px; }
+
+  /* PIPELINE VISUAL */
+  .pipeline {
+    display:flex; align-items:center; gap:0; margin-top:12px; flex-wrap:nowrap; overflow:hidden;
+  }
+  .pipe-step {
+    flex:1; text-align:center; padding:8px 6px;
+    background:rgba(255,255,255,0.04); border-radius:8px;
+    font-size:11px; color:var(--gray-light); line-height:1.4;
+    position:relative;
+  }
+  .pipe-step strong { display:block; font-size:12px; color:var(--white); margin-bottom:2px; }
+  .pipe-arrow {
+    color:var(--teal); font-size:16px; padding:0 4px; flex-shrink:0;
+  }
+
+  /* FOOTER */
+  .footer {
+    margin-top:28px; padding-top:18px; border-top:1px solid var(--border);
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .footer-note { font-size:11px; color:var(--gray-text); letter-spacing:0.4px; }
+  .footer-badge { font-size:11px; font-weight:700; color:var(--teal); letter-spacing:1px; text-transform:uppercase; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo-wrap">
+    <svg width="36" height="36" viewBox="0 0 38 38" fill="none">
+      <path d="M8 7 L8 31 Q8 31 18 24 L26 19 L18 14 Z" fill="#03EF62"/>
+      <path d="M20 5 L28 10 L28 28 L20 33" stroke="#03EF62" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    </svg>
+    <div>
+      <div class="logo-text">PCA</div>
+      <div class="logo-sub">Cheat Sheet</div>
+    </div>
+  </div>
+  <div class="title-block">
+    <div class="main-title">Principal Component <span class="hi">Analysis</span></div>
+    <div class="main-sub">Concept · Math · Python Implementation · sklearn · Visualization</div>
+  </div>
+  <div class="header-right">
+    <div class="hr-tag">PCA Reference</div>
+    <div class="hr-sub">Dimensionality Reduction</div>
+  </div>
+</div>
+
+
+<!-- ═══ §1 WHAT IS PCA ═══ -->
+<div class="section-header">
+  <div class="sh-line"></div>
+  <div class="sh-label sh-c1">§1 · What is PCA?</div>
+  <div class="sh-line"></div>
+</div>
+
+<div class="grid3">
+
+  <!-- Intuition -->
+  <div class="card c1">
+    <div class="card-top"><span class="badge">Intuition</span><span class="tag-chip">Unsupervised</span></div>
+    <div class="card-title">🧭 <span class="accent">Core Idea</span></div>
+    <hr class="div">
+    <p class="def">PCA finds the directions of <strong>maximum variance</strong> in high-dimensional data, then projects the data onto fewer dimensions — losing as little information as possible.</p>
+    <ul class="pts">
+      <li>Reduces p features → k components (k &lt;&lt; p)</li>
+      <li>New axes = <strong>principal components</strong> (PCs)</li>
+      <li>PCs are <strong>orthogonal</strong> to each other</li>
+      <li>First PC captures most variance, second the next, etc.</li>
+      <li>Unsupervised — ignores labels completely</li>
+    </ul>
+    <div class="mbox">
+      Original data: n samples × p features<br>
+      After PCA:     n samples × k components<br>
+      where k ≤ p   (usually k &lt;&lt; p)
+    </div>
+  </div>
+
+  <!-- When to use -->
+  <div class="card c1">
+    <div class="card-top"><span class="badge">Use Cases</span><span class="tag-chip">When to apply</span></div>
+    <div class="card-title">✅ <span class="accent">When to Use</span> PCA</div>
+    <hr class="div">
+    <ul class="pts">
+      <li>📉 <strong>Curse of dimensionality</strong> — too many features</li>
+      <li>🧹 Remove multicollinearity before regression/ML</li>
+      <li>👁️ <strong>Visualize</strong> high-dim data in 2D/3D</li>
+      <li>⚡ Speed up model training (fewer features)</li>
+      <li>🗜️ Data compression & storage</li>
+      <li>🔬 Noise reduction in signals/images</li>
+      <li>🧬 Genomics, image recognition, finance</li>
+    </ul>
+    <div class="mbox">
+      ❌ Avoid when: interpretability matters<br>
+      (PCs are linear combos — hard to explain)<br>
+      ❌ Non-linear structure → use UMAP / t-SNE
+    </div>
+  </div>
+
+  <!-- Key Terminology -->
+  <div class="card c1">
+    <div class="card-top"><span class="badge">Glossary</span><span class="tag-chip">Key Terms</span></div>
+    <div class="card-title">📖 <span class="accent">Key Terms</span></div>
+    <hr class="div">
+    <ul class="pts">
+      <li><strong>Principal Component</strong>: new axis of max variance</li>
+      <li><strong>Loading vector</strong>: direction of a PC in original space</li>
+      <li><strong>Score</strong>: projection of a sample onto a PC</li>
+      <li><strong>Eigenvalue</strong>: variance explained by each PC</li>
+      <li><strong>Eigenvector</strong>: direction of each PC</li>
+      <li><strong>Explained variance ratio</strong>: fraction of total variance per PC</li>
+      <li><strong>Scree plot</strong>: eigenvalue vs PC number</li>
+      <li><strong>Biplot</strong>: scores + loadings in same plot</li>
+    </ul>
+  </div>
+
+</div>
+
+
+<!-- ═══ §2 THE MATH ═══ -->
+<div class="section-header">
+  <div class="sh-line"></div>
+  <div class="sh-label sh-c2">§2 · The Mathematics</div>
+  <div class="sh-line"></div>
+</div>
+
+<div class="grid3">
+
+  <!-- Step by step -->
+  <div class="card c2 span2">
+    <div class="card-top"><span class="badge">Algorithm</span><span class="tag-chip">Step by Step</span></div>
+    <div class="card-title">🔢 <span class="accent">PCA Algorithm</span> — 6 Steps</div>
+    <hr class="div">
+    <div class="inner2">
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text"><strong>Standardize</strong> the data — subtract mean, divide by std. Each feature gets μ=0, σ=1. (Critical if features have different scales)</div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text"><strong>Compute Covariance Matrix</strong> Σ — a p×p matrix capturing how each pair of features varies together.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text"><strong>Eigen-decomposition</strong> — find eigenvalues λ and eigenvectors v of Σ. Each eigenvector is a PC direction.</div>
+        </div>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text"><strong>Sort</strong> eigenvalues in descending order. Largest λ = most variance = PC1.</div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-text"><strong>Select k components</strong> — choose how many PCs to keep using explained variance (e.g. 95% threshold or elbow in scree plot).</div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div>
+          <div class="step-text"><strong>Project</strong> data onto selected PCs — multiply standardized data X by the k eigenvectors → new k-dim representation.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Math formulas -->
+  <div class="card c2">
+    <div class="card-top"><span class="badge">Formulas</span><span class="tag-chip">Core Math</span></div>
+    <div class="card-title">∑ <span class="accent">Key Equations</span></div>
+    <hr class="div">
+    <div class="sl">Standardize</div>
+    <div class="fbox">z = (x − μ) / σ</div>
+    <div class="sl">Covariance Matrix</div>
+    <div class="fbox">Σ = (1/n) Xᵀ X<br><span class="hi">Σ</span>ᵢⱼ = Cov(xᵢ, xⱼ)</div>
+    <div class="sl">Eigen-decomposition</div>
+    <div class="fbox"><span class="hi">Σ · v = λ · v</span><br>v = eigenvector (PC)<br>λ = eigenvalue (variance)</div>
+    <div class="sl">Projection</div>
+    <div class="fbox"><span class="hi">Z = X · W</span><br>W = matrix of k eigenvectors<br>Z = scores (new coordinates)</div>
+    <div class="sl">Explained Variance</div>
+    <div class="fbox">ratio = λᵢ / Σλⱼ</div>
+  </div>
+
+</div>
+
+
+<!-- ═══ §3 PYTHON WITH SKLEARN ═══ -->
+<div class="section-header">
+  <div class="sh-line"></div>
+  <div class="sh-label sh-c3">§3 · PCA with Python &amp; scikit-learn</div>
+  <div class="sh-line"></div>
+</div>
+
+<div class="grid3">
+
+  <!-- Import & Fit -->
+  <div class="card c3">
+    <div class="card-top"><span class="badge">Setup</span><span class="tag-chip">sklearn</span></div>
+    <div class="card-title">📦 <span class="accent">Import &amp; Fit</span> PCA</div>
+    <hr class="div">
+    <div class="fbox">
+<span class="kw">from</span> sklearn.preprocessing <span class="kw">import</span> <span class="cl">StandardScaler</span><br>
+<span class="kw">from</span> sklearn.decomposition  <span class="kw">import</span> <span class="cl">PCA</span><br>
+<span class="kw">import</span> numpy <span class="kw">as</span> np<br>
+<span class="kw">import</span> pandas <span class="kw">as</span> pd<br>
+<br>
+<span class="cm"># 1. Standardize</span><br>
+scaler = <span class="cl">StandardScaler</span>()<br>
+X_scaled = scaler.<span class="fn">fit_transform</span>(X)<br>
+<br>
+<span class="cm"># 2. Fit PCA</span><br>
+pca = <span class="cl">PCA</span>(n_components=<span class="nm">2</span>)<br>
+X_pca = pca.<span class="fn">fit_transform</span>(X_scaled)<br>
+<br>
+<span class="cm"># Shape: (n_samples, 2)</span><br>
+<span class="fn">print</span>(X_pca.shape)
+    </div>
+  </div>
+
+  <!-- Key attributes -->
+  <div class="card c3">
+    <div class="card-top"><span class="badge">Attributes</span><span class="tag-chip">After fitting</span></div>
+    <div class="card-title">🔍 <span class="accent">Key Attributes</span></div>
+    <hr class="div">
+    <div class="fbox">
+<span class="cm"># Explained variance ratio per PC</span><br>
+pca.<span class="hi">explained_variance_ratio_</span><br>
+<span class="cm"># e.g. [0.72, 0.15, 0.08, ...]</span><br>
+<br>
+<span class="cm"># Cumulative explained variance</span><br>
+np.<span class="fn">cumsum</span>(pca.explained_variance_ratio_)<br>
+<br>
+<span class="cm"># The principal components (loadings)</span><br>
+pca.<span class="hi">components_</span>   <span class="cm"># shape (k, p)</span><br>
+<br>
+<span class="cm"># Eigenvalues</span><br>
+pca.<span class="hi">explained_variance_</span><br>
+<br>
+<span class="cm"># Singular values</span><br>
+pca.<span class="hi">singular_values_</span><br>
+<br>
+<span class="cm"># Mean of each feature</span><br>
+pca.<span class="hi">mean_</span>
+    </div>
+  </div>
+
+  <!-- Choose n_components -->
+  <div class="card c3">
+    <div class="card-top"><span class="badge">Selection</span><span class="tag-chip">How many PCs?</span></div>
+    <div class="card-title">🎯 <span class="accent">Choosing</span> n_components</div>
+    <hr class="div">
+    <div class="fbox">
+<span class="cm"># Option 1: fixed number</span><br>
+pca = <span class="cl">PCA</span>(n_components=<span class="nm">3</span>)<br>
+<br>
+<span class="cm"># Option 2: % of variance (e.g. 95%)</span><br>
+pca = <span class="cl">PCA</span>(n_components=<span class="nm">0.95</span>)<br>
+<br>
+<span class="cm"># Option 3: keep all, then inspect</span><br>
+pca = <span class="cl">PCA</span>()   <span class="cm"># no n_components</span><br>
+pca.<span class="fn">fit</span>(X_scaled)<br>
+cumvar = np.<span class="fn">cumsum</span>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;pca.explained_variance_ratio_)<br>
+k = np.<span class="fn">argmax</span>(cumvar >= <span class="nm">0.95</span>) + <span class="nm">1</span><br>
+<span class="fn">print</span>(<span class="st">f"Need </span>{k}<span class="st"> PCs for 95% var"</span>)
+    </div>
+  </div>
+
+</div>
+
+<div class="grid4" style="margin-top:16px;">
+
+  <!-- Inverse transform -->
+  <div class="card c3">
+    <div class="card-top"><span class="badge">Reconstruction</span></div>
+    <div class="card-title">🔄 <span class="accent">Inverse Transform</span></div>
+    <hr class="div">
+    <p class="def">Project back to original space — useful for measuring reconstruction error or denoising.</p>
+    <div class="fbox">
+<span class="cm"># Reconstruct original features</span><br>
+X_reconstructed = pca.<span class="fn">inverse_transform</span>(X_pca)<br>
+<br>
+<span class="cm"># Reconstruction error (MSE)</span><br>
+error = np.<span class="fn">mean</span>((X_scaled - X_reconstructed)**<span class="nm">2</span>)
+    </div>
+  </div>
+
+  <!-- Pipeline -->
+  <div class="card c3">
+    <div class="card-top"><span class="badge">Best Practice</span></div>
+    <div class="card-title">🔗 <span class="accent">sklearn Pipeline</span></div>
+    <hr class="div">
+    <p class="def">Chain StandardScaler + PCA + model in a single reusable pipeline.</p>
+    <div class="fbox">
+<span class="kw">from</span> sklearn.pipeline <span class="kw">import</span> <span class="cl">Pipeline</span><br>
+<span class="kw">from</span> sklearn.svm <span class="kw">import</span> <span class="cl">SVC</span><br>
+<br>
+pipe = <span class="cl">Pipeline</span>([<br>
+&nbsp;&nbsp;(<span class="st">'scale'</span>, <span class="cl">StandardScaler</span>()),<br>
+&nbsp;&nbsp;(<span class="st">'pca'</span>,   <span class="cl">PCA</span>(n_components=<span class="nm">0.95</span>)),<br>
+&nbsp;&nbsp;(<span class="st">'clf'</span>,   <span class="cl">SVC</span>())<br>
+])<br>
+pipe.<span class="fn">fit</span>(X_train, y_train)
+    </div>
+  </div>
+
+  <!-- Incremental PCA -->
+  <div class="card c3">
+    <div class="card-top"><span class="badge">Large Data</span></div>
+    <div class="card-title">⚡ <span class="accent">Incremental PCA</span></div>
+    <hr class="div">
+    <p class="def">For large datasets that don't fit in memory — processes data in mini-batches.</p>
+    <div class="fbox">
+<span class="kw">from</span> sklearn.decomposition <span class="kw">import</span> <span class="cl">IncrementalPCA</span><br>
+<br>
+ipca = <span class="cl">IncrementalPCA</span>(n_components=<span class="nm">50</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;batch_size=<span class="nm">200</span>)<br>
+<br>
+<span class="kw">for</span> batch <span class="kw">in</span> np.<span class="fn">array_split</span>(X, <span class="nm">10</span>):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ipca.<span class="fn">partial_fit</span>(batch)<br>
+<br>
+X_reduced = ipca.<span class="fn">transform</span>(X)
+    </div>
+  </div>
+
+  <!-- Kernel PCA -->
+  <div class="card c3">
+    <div class="card-top"><span class="badge">Non-Linear</span></div>
+    <div class="card-title">🌀 <span class="accent">Kernel PCA</span></div>
+    <hr class="div">
+    <p class="def">Extends PCA to non-linear structure using the kernel trick. Good for complex manifolds.</p>
+    <div class="fbox">
+<span class="kw">from</span> sklearn.decomposition <span class="kw">import</span> <span class="cl">KernelPCA</span><br>
+<br>
+<span class="cm"># RBF kernel (Gaussian)</span><br>
+kpca = <span class="cl">KernelPCA</span>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;n_components=<span class="nm">2</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;kernel=<span class="st">'rbf'</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;gamma=<span class="nm">0.04</span><br>
+)<br>
+X_kpca = kpca.<span class="fn">fit_transform</span>(X_scaled)<br>
+<span class="cm"># kernels: rbf, poly, sigmoid, cosine</span>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ═══ §4 VISUALIZATION ═══ -->
+<div class="section-header">
+  <div class="sh-line"></div>
+  <div class="sh-label sh-c4">§4 · Visualization</div>
+  <div class="sh-line"></div>
+</div>
+
+<div class="grid3">
+
+  <!-- Scree plot -->
+  <div class="card c4">
+    <div class="card-top"><span class="badge">Scree Plot</span><span class="tag-chip">matplotlib</span></div>
+    <div class="card-title">📉 <span class="accent">Scree Plot</span> — Explained Variance</div>
+    <hr class="div">
+    <p class="def">Visualize how much variance each component explains. Look for the "elbow" to choose k.</p>
+    <div class="fbox">
+<span class="kw">import</span> matplotlib.pyplot <span class="kw">as</span> plt<br>
+<br>
+pca_full = <span class="cl">PCA</span>().<span class="fn">fit</span>(X_scaled)<br>
+evr = pca_full.explained_variance_ratio_<br>
+<br>
+fig, ax = plt.<span class="fn">subplots</span>(<span class="nm">1</span>, <span class="nm">2</span>, figsize=(<span class="nm">10</span>,<span class="nm">4</span>))<br>
+<br>
+<span class="cm"># Bar chart</span><br>
+ax[<span class="nm">0</span>].<span class="fn">bar</span>(<span class="fn">range</span>(<span class="nm">1</span>, <span class="fn">len</span>(evr)+<span class="nm">1</span>), evr)<br>
+ax[<span class="nm">0</span>].<span class="fn">set_xlabel</span>(<span class="st">'PC'</span>)<br>
+ax[<span class="nm">0</span>].<span class="fn">set_ylabel</span>(<span class="st">'Explained Variance'</span>)<br>
+<br>
+<span class="cm"># Cumulative line</span><br>
+ax[<span class="nm">1</span>].<span class="fn">plot</span>(np.<span class="fn">cumsum</span>(evr), <span class="st">'o-'</span>)<br>
+ax[<span class="nm">1</span>].<span class="fn">axhline</span>(<span class="nm">0.95</span>, ls=<span class="st">'--'</span>, color=<span class="st">'red'</span>)<br>
+ax[<span class="nm">1</span>].<span class="fn">set_ylabel</span>(<span class="st">'Cumulative Var'</span>)
+    </div>
+  </div>
+
+  <!-- 2D scatter -->
+  <div class="card c4">
+    <div class="card-top"><span class="badge">2D Plot</span><span class="tag-chip">seaborn</span></div>
+    <div class="card-title">🔵 <span class="accent">2D PCA</span> Scatter Plot</div>
+    <hr class="div">
+    <p class="def">Project to 2D and color by class label — classic way to inspect cluster separation.</p>
+    <div class="fbox">
+<span class="kw">import</span> seaborn <span class="kw">as</span> sns<br>
+<br>
+pca2 = <span class="cl">PCA</span>(n_components=<span class="nm">2</span>)<br>
+coords = pca2.<span class="fn">fit_transform</span>(X_scaled)<br>
+<br>
+df_pca = pd.<span class="cl">DataFrame</span>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;coords,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;columns=[<span class="st">'PC1'</span>, <span class="st">'PC2'</span>]<br>
+)<br>
+df_pca[<span class="st">'label'</span>] = y<br>
+<br>
+sns.<span class="fn">scatterplot</span>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;data=df_pca,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;x=<span class="st">'PC1'</span>, y=<span class="st">'PC2'</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;hue=<span class="st">'label'</span>, palette=<span class="st">'Set2'</span><br>
+)
+    </div>
+  </div>
+
+  <!-- Loadings heatmap -->
+  <div class="card c4">
+    <div class="card-top"><span class="badge">Loadings</span><span class="tag-chip">Heatmap</span></div>
+    <div class="card-title">🌡️ <span class="accent">Loadings Heatmap</span></div>
+    <hr class="div">
+    <p class="def">Shows which original features contribute most to each PC — essential for interpretation.</p>
+    <div class="fbox">
+<span class="cm"># Build loadings DataFrame</span><br>
+loadings = pd.<span class="cl">DataFrame</span>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;pca.components_.T,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;columns=[<span class="st">f'PC</span>{i+<span class="nm">1</span>}<span class="st">'</span> <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(k)],<br>
+&nbsp;&nbsp;&nbsp;&nbsp;index=feature_names<br>
+)<br>
+<br>
+sns.<span class="fn">heatmap</span>(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;loadings,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;annot=<span class="nm">True</span>, fmt=<span class="st">'.2f'</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;cmap=<span class="st">'coolwarm'</span>,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;center=<span class="nm">0</span><br>
+)
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ═══ §5 TIPS & COMPARISON ═══ -->
+<div class="section-header">
+  <div class="sh-line"></div>
+  <div class="sh-label sh-c5">§5 · Tips, Pitfalls &amp; Alternatives</div>
+  <div class="sh-line"></div>
+</div>
+
+<div class="grid4">
+
+  <!-- Tips -->
+  <div class="card c5">
+    <div class="card-top"><span class="badge">Best Practices</span></div>
+    <div class="card-title">💡 <span class="accent">Tips &amp; Tricks</span></div>
+    <hr class="div">
+    <ul class="pts">
+      <li>Always <strong>standardize first</strong> — PCA is scale-sensitive</li>
+      <li>Fit scaler & PCA on train set, apply to test</li>
+      <li>Use 95% cumulative variance as default threshold</li>
+      <li>Check the elbow in scree plot visually</li>
+      <li>PCA on correlation matrix = standardized data</li>
+      <li>Inspect loadings to understand what PCs mean</li>
+    </ul>
+  </div>
+
+  <!-- Pitfalls -->
+  <div class="card c5">
+    <div class="card-top"><span class="badge">Watch Out</span></div>
+    <div class="card-title">⚠️ <span class="accent">Common Pitfalls</span></div>
+    <hr class="div">
+    <ul class="pts">
+      <li>❌ Don't apply PCA before scaling — results are meaningless</li>
+      <li>❌ Don't fit PCA on the test set (data leakage!)</li>
+      <li>❌ PCA assumes linear relationships only</li>
+      <li>❌ Outliers strongly distort PCA — clean first</li>
+      <li>❌ PCA removes noise AND signal — can hurt accuracy</li>
+      <li>❌ PCs have no intuitive meaning (not original features)</li>
+    </ul>
+  </div>
+
+  <!-- Alternatives -->
+  <div class="card c5">
+    <div class="card-top"><span class="badge">Alternatives</span></div>
+    <div class="card-title">🔀 <span class="accent">PCA vs Alternatives</span></div>
+    <hr class="div">
+    <ul class="pts">
+      <li><strong>t-SNE</strong>: non-linear, visualization only (no transform)</li>
+      <li><strong>UMAP</strong>: non-linear, faster, preserves global structure</li>
+      <li><strong>LDA</strong>: supervised — maximizes class separation</li>
+      <li><strong>Autoencoder</strong>: non-linear deep learning version of PCA</li>
+      <li><strong>ICA</strong>: finds statistically independent components</li>
+      <li><strong>NMF</strong>: non-negative features (images, text)</li>
+    </ul>
+  </div>
+
+  <!-- Quick ref -->
+  <div class="card c5">
+    <div class="card-top"><span class="badge">Quick Ref</span></div>
+    <div class="card-title">⚡ <span class="accent">sklearn API</span> at a Glance</div>
+    <hr class="div">
+    <div class="fbox">
+<span class="cm"># Fit + transform</span><br>
+pca.<span class="hi">fit_transform</span>(X)<br>
+<br>
+<span class="cm"># Apply to new data</span><br>
+pca.<span class="hi">transform</span>(X_test)<br>
+<br>
+<span class="cm"># Reconstruct</span><br>
+pca.<span class="hi">inverse_transform</span>(X_pca)<br>
+<br>
+<span class="cm"># Variance per component</span><br>
+pca.<span class="hi">explained_variance_ratio_</span><br>
+<br>
+<span class="cm"># Component directions</span><br>
+pca.<span class="hi">components_</span>       <span class="cm"># (k, p)</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-note">Principal Component Analysis · Concept · Math · sklearn · Python Visualization</div>
+  <div class="footer-badge"> · PCA cheat sheet</div>
+</div>
+
+</body>
+</html>

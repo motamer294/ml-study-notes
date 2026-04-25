@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Descriptive Statistics Cheat Sheet – DataCamp</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #05192D;
+    --navy-mid: #0a2540;
+    --navy-card: #0d2a45;
+    --teal: #03EF62;
+    --white: #ffffff;
+    --gray-text: #6b8299;
+    --gray-body: #9ab0c5;
+    --gray-light: #b8cfe0;
+    --border: rgba(3,239,98,0.15);
+    --c1: #03EF62;
+    --c2: #05a8e6;
+    --c3: #f5832a;
+    --c4: #7c5cbf;
+    --c5: #e84855;
+    --c6: #e8b84b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    background: var(--navy);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--white);
+    width: 1440px;
+    margin: 0 auto;
+    padding: 46px 52px 60px;
+  }
+
+  /* HEADER */
+  .header {
+    display:flex; align-items:flex-end; justify-content:space-between;
+    padding-bottom:22px; border-bottom:2px solid var(--border); margin-bottom:30px;
+  }
+  .logo-wrap { display:flex; align-items:center; gap:12px; }
+  .logo-text { font-size:20px; font-weight:700; letter-spacing:-0.5px; }
+  .logo-sub  { font-size:11px; color:var(--gray-text); letter-spacing:0.5px; }
+  .title-block { text-align:center; }
+  .main-title { font-size:42px; font-weight:700; letter-spacing:-2px; line-height:1.05; }
+  .main-title .hi { color:var(--teal); }
+  .main-sub { font-size:13px; color:var(--gray-text); margin-top:4px; letter-spacing:0.3px; }
+  .header-right { text-align:right; }
+  .hr-tag { font-size:11px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--teal); }
+  .hr-sub { font-size:11px; color:var(--gray-text); margin-top:3px; }
+
+  /* SECTION HEADERS */
+  .section-header { display:flex; align-items:center; gap:12px; margin:26px 0 14px; }
+  .sh-line { flex:1; height:1px; background:rgba(255,255,255,0.07); }
+  .sh-label {
+    font-size:11px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase;
+    padding:4px 14px; border-radius:20px; white-space:nowrap;
+  }
+  .sh-c1 { background:rgba(3,239,98,0.1);   color:var(--c1); }
+  .sh-c2 { background:rgba(5,168,230,0.1);  color:var(--c2); }
+  .sh-c3 { background:rgba(245,131,42,0.1); color:var(--c3); }
+  .sh-c4 { background:rgba(124,92,191,0.1); color:var(--c4); }
+  .sh-c5 { background:rgba(232,72,85,0.1);  color:var(--c5); }
+  .sh-c6 { background:rgba(232,184,75,0.1); color:var(--c6); }
+
+  /* GRIDS */
+  .grid2 { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .grid4 { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .span2 { grid-column:span 2; }
+  .span3 { grid-column:span 3; }
+
+  /* CARD */
+  .card {
+    background:var(--navy-card);
+    border:1px solid rgba(255,255,255,0.06);
+    border-radius:13px; padding:18px 20px 20px;
+    position:relative; overflow:hidden;
+  }
+  .card::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:3px; border-radius:13px 13px 0 0;
+  }
+  .card.c1::before { background:var(--c1); }
+  .card.c2::before { background:var(--c2); }
+  .card.c3::before { background:var(--c3); }
+  .card.c4::before { background:var(--c4); }
+  .card.c5::before { background:var(--c5); }
+  .card.c6::before { background:var(--c6); }
+
+  .card-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:10px; }
+  .badge { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:3px 8px; border-radius:4px; background:rgba(255,255,255,0.05); color:var(--gray-text); }
+  .tag-chip { font-size:10px; font-weight:600; padding:3px 9px; border-radius:10px; }
+  .card.c1 .tag-chip { background:rgba(3,239,98,0.12);   color:var(--c1); }
+  .card.c2 .tag-chip { background:rgba(5,168,230,0.12);  color:var(--c2); }
+  .card.c3 .tag-chip { background:rgba(245,131,42,0.12); color:var(--c3); }
+  .card.c4 .tag-chip { background:rgba(124,92,191,0.12); color:var(--c4); }
+  .card.c5 .tag-chip { background:rgba(232,72,85,0.12);  color:var(--c5); }
+  .card.c6 .tag-chip { background:rgba(232,184,75,0.12); color:var(--c6); }
+
+  .card-title { font-size:15px; font-weight:700; letter-spacing:-0.3px; line-height:1.3; color:var(--white); margin-bottom:8px; }
+  .card.c1 .accent { color:var(--c1); }
+  .card.c2 .accent { color:var(--c2); }
+  .card.c3 .accent { color:var(--c3); }
+  .card.c4 .accent { color:var(--c4); }
+  .card.c5 .accent { color:var(--c5); }
+  .card.c6 .accent { color:var(--c6); }
+
+  hr.div { border:none; border-top:1px solid rgba(255,255,255,0.06); margin:10px 0; }
+  .def { font-size:12px; color:var(--gray-body); line-height:1.65; margin-bottom:8px; }
+  .sl { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--gray-text); margin:10px 0 6px; }
+
+  .pts { list-style:none; display:flex; flex-direction:column; gap:5px; }
+  .pts li { font-size:11.5px; color:var(--gray-light); line-height:1.5; display:flex; gap:7px; align-items:flex-start; }
+  .pts li::before { content:'▸'; font-size:9px; margin-top:3px; flex-shrink:0; }
+  .card.c1 .pts li::before { color:var(--c1); }
+  .card.c2 .pts li::before { color:var(--c2); }
+  .card.c3 .pts li::before { color:var(--c3); }
+  .card.c4 .pts li::before { color:var(--c4); }
+  .card.c5 .pts li::before { color:var(--c5); }
+  .card.c6 .pts li::before { color:var(--c6); }
+
+  /* FORMULA BOX */
+  .fbox {
+    background:rgba(0,0,0,0.3); border-radius:9px; padding:10px 14px;
+    margin-top:10px; font-family:'DM Mono',monospace; font-size:12px;
+    color:#8bafc8; line-height:1.9;
+  }
+  .card.c1 .fbox { border-left:3px solid var(--c1); }
+  .card.c2 .fbox { border-left:3px solid var(--c2); }
+  .card.c3 .fbox { border-left:3px solid var(--c3); }
+  .card.c4 .fbox { border-left:3px solid var(--c4); }
+  .card.c5 .fbox { border-left:3px solid var(--c5); }
+  .card.c6 .fbox { border-left:3px solid var(--c6); }
+  .kw  { color:#05a8e6; }
+  .fn  { color:#f5832a; }
+  .cl  { color:#e8b84b; }
+  .st  { color:#a8cc8c; }
+  .cm  { color:#4a6a7c; font-style:italic; }
+  .nm  { color:#ce9178; }
+  .hi  { font-weight:600; color:var(--white); }
+  .card.c1 .hi { color:var(--c1); }
+  .card.c2 .hi { color:var(--c2); }
+  .card.c3 .hi { color:var(--c3); }
+  .card.c4 .hi { color:var(--c4); }
+  .card.c5 .hi { color:var(--c5); }
+  .card.c6 .hi { color:var(--c6); }
+
+  /* EXAMPLE ROW */
+  .ex-row {
+    display:flex; gap:6px; flex-wrap:wrap; margin-top:8px;
+  }
+  .ex-num {
+    width:30px; height:30px; border-radius:8px; display:flex; align-items:center;
+    justify-content:center; font-size:12px; font-weight:700; font-family:'DM Mono',monospace;
+    background:rgba(255,255,255,0.06); color:var(--gray-light);
+  }
+  .ex-num.special { color:var(--white); }
+  .card.c1 .ex-num.special { background:rgba(3,239,98,0.2); color:var(--c1); }
+  .card.c2 .ex-num.special { background:rgba(5,168,230,0.2); color:var(--c2); }
+  .card.c3 .ex-num.special { background:rgba(245,131,42,0.2); color:var(--c3); }
+  .card.c4 .ex-num.special { background:rgba(124,92,191,0.2); color:var(--c4); }
+  .card.c5 .ex-num.special { background:rgba(232,72,85,0.2); color:var(--c5); }
+  .card.c6 .ex-num.special { background:rgba(232,184,75,0.2); color:var(--c6); }
+
+  /* VISUAL NUMBER LINE */
+  .numline { margin-top:12px; position:relative; height:36px; }
+  .nl-track { position:absolute; top:50%; left:0; right:0; height:2px; background:rgba(255,255,255,0.1); transform:translateY(-50%); }
+  .nl-fill  { position:absolute; top:50%; height:2px; transform:translateY(-50%); }
+  .nl-dot   { position:absolute; top:50%; width:10px; height:10px; border-radius:50%; transform:translate(-50%,-50%); }
+  .nl-label { position:absolute; top:0; font-size:9px; font-family:'DM Mono',monospace; transform:translateX(-50%); color:var(--gray-text); }
+
+  /* COMPARISON TABLE */
+  .ctable { width:100%; border-collapse:collapse; margin-top:10px; font-size:11.5px; }
+  .ctable th { font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--gray-text); padding:6px 10px; text-align:left; border-bottom:1px solid rgba(255,255,255,0.07); }
+  .ctable td { padding:7px 10px; color:var(--gray-light); border-bottom:1px solid rgba(255,255,255,0.04); vertical-align:top; line-height:1.45; }
+  .ctable tr:last-child td { border-bottom:none; }
+  .ctable td:first-child { font-weight:600; color:var(--white); }
+
+  /* DIST SHAPE VISUAL */
+  .shapes { display:flex; gap:10px; margin-top:10px; }
+  .shape-item { flex:1; text-align:center; }
+  .shape-label { font-size:10px; color:var(--gray-text); margin-top:5px; letter-spacing:0.5px; }
+
+  /* INNER GRID */
+  .inner2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:8px; }
+  .inner3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; margin-top:8px; }
+
+  /* FOOTER */
+  .footer {
+    margin-top:28px; padding-top:18px; border-top:1px solid var(--border);
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .footer-note { font-size:11px; color:var(--gray-text); }
+  .footer-badge { font-size:11px; font-weight:700; color:var(--teal); letter-spacing:1px; text-transform:uppercase; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo-wrap">
+    <svg width="36" height="36" viewBox="0 0 38 38" fill="none">
+      <path d="M8 7 L8 31 Q8 31 18 24 L26 19 L18 14 Z" fill="#03EF62"/>
+      <path d="M20 5 L28 10 L28 28 L20 33" stroke="#03EF62" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    </svg>
+    <div>
+      <div class="logo-text">datacamp</div>
+      <div class="logo-sub">Cheat Sheet</div>
+    </div>
+  </div>
+  <div class="title-block">
+    <div class="main-title"><span class="hi">Descriptive</span> Statistics</div>
+    <div class="main-sub">Mean · Median · Mode · Variance · Standard Deviation · Spread</div>
+  </div>
+  <div class="header-right">
+    <div class="hr-tag">Stats Reference</div>
+    <div class="hr-sub">Central Tendency &amp; Dispersion</div>
+  </div>
+</div>
+
+
+<!-- ═══ §1 MEASURES OF CENTRAL TENDENCY ═══ -->
+<div class="section-header">
+  <div class="sh-line"></div>
+  <div class="sh-label sh-c1">§1 · Measures of Central Tendency</div>
+  <div class="sh-line"></div>
+</div>
+
+<div class="grid3">
+
+  <!-- MEAN -->
+  <div class="card c1">
+    <div class="card-top"><span class="badge">Average</span><span class="tag-chip">Most Common</span></div>
+    <div class="card-title">➕ <span class="accent">Mean</span> — Arithmetic Average</div>
+    <hr class="div">
+    <p class="def">The sum of all values divided by the number of values. The "balancing point" of the data. Affected by outliers.</p>
+    <div class="sl">Example · Dataset: 2, 4, 4, 4, 5, 5, 7, 9</div>
+    <div class="ex-row">
+      <div class="ex-num">2</div><div class="ex-num">4</div><div class="ex-num">4</div><div class="ex-num">4</div>
+      <div class="ex-num">5</div><div class="ex-num">5</div><div class="ex-num">7</div><div class="ex-num">9</div>
+    </div>
+    <div class="fbox">
+      Sum = 2+4+4+4+5+5+7+9 = <span class="hi">40</span><br>
+      n = 8<br>
+      <span class="hi">μ = Σxᵢ / n = 40 / 8 = 5.0</span>
+    </div>
+    <div class="sl">Formula</div>
+    <div class="fbox">
+      <span class="hi">Population: μ = Σxᵢ / N</span><br>
+      Sample:     x̄ = Σxᵢ / n
+    </div>
+    <div class="sl">Watch out</div>
+    <ul class="pts">
+      <li>Sensitive to <strong>outliers</strong> — one extreme value shifts it</li>
+      <li>Best for <strong>symmetric</strong> distributions</li>
+    </ul>
+  </div>
+
+  <!-- MEDIAN -->
+  <div class="card c2">
+    <div class="card-top"><span class="badge">Middle Value</span><span class="tag-chip">Robust</span></div>
+    <div class="card-title">📍 <span class="accent">Median</span> — Middle Value</div>
+    <hr class="div">
+    <p class="def">The middle value when data is sorted. Splits the data exactly in half — 50% above, 50% below. Resistant to outliers.</p>
+    <div class="sl">Example · Sorted: 2, 4, 4, 4, 5, 5, 7, 9</div>
+    <div class="ex-row">
+      <div class="ex-num">2</div><div class="ex-num">4</div><div class="ex-num">4</div>
+      <div class="ex-num special">4</div><div class="ex-num special">5</div>
+      <div class="ex-num">5</div><div class="ex-num">7</div><div class="ex-num">9</div>
+    </div>
+    <div class="fbox">
+      n = 8 (even) → average middle two<br>
+      Middle values: 4 and 5<br>
+      <span class="hi">Median = (4 + 5) / 2 = 4.5</span>
+    </div>
+    <div class="sl">Rules</div>
+    <ul class="pts">
+      <li><strong>Odd n</strong>: middle value at position (n+1)/2</li>
+      <li><strong>Even n</strong>: average of the two middle values</li>
+      <li>Always <strong>sort first!</strong></li>
+      <li>Preferred for <strong>skewed data</strong> (e.g. income)</li>
+    </ul>
+  </div>
+
+  <!-- MODE -->
+  <div class="card c3">
+    <div class="card-top"><span class="badge">Most Frequent</span><span class="tag-chip">Categorical OK</span></div>
+    <div class="card-title">🏆 <span class="accent">Mode</span> — Most Frequent Value</div>
+    <hr class="div">
+    <p class="def">The value(s) that appear most often. The only measure of central tendency that works for categorical data.</p>
+    <div class="sl">Example · Dataset: 2, 4, 4, 4, 5, 5, 7, 9</div>
+    <div class="ex-row">
+      <div class="ex-num">2</div>
+      <div class="ex-num special">4</div><div class="ex-num special">4</div><div class="ex-num special">4</div>
+      <div class="ex-num">5</div><div class="ex-num">5</div><div class="ex-num">7</div><div class="ex-num">9</div>
+    </div>
+    <div class="fbox">
+      4 appears <span class="hi">3 times</span> ← most frequent<br>
+      <span class="hi">Mode = 4</span>
+    </div>
+    <div class="sl">Types</div>
+    <ul class="pts">
+      <li><strong>Unimodal</strong>: one mode (most common)</li>
+      <li><strong>Bimodal</strong>: two modes (two peaks)</li>
+      <li><strong>Multimodal</strong>: three or more modes</li>
+      <li><strong>No mode</strong>: all values appear once</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- Mean vs Median vs Mode comparison -->
+<div class="grid3" style="margin-top:16px;">
+  <div class="card c4 span3">
+    <div class="card-top"><span class="badge">Comparison</span><span class="tag-chip">When to use which?</span></div>
+    <div class="card-title">⚖️ <span class="accent">Mean vs Median vs Mode</span> — Side by Side</div>
+    <hr class="div">
+    <div class="inner3">
+      <div>
+        <table class="ctable">
+          <tr><th>Property</th><th>Mean</th><th>Median</th><th>Mode</th></tr>
+          <tr><td>Outlier sensitive</td><td>Yes ❌</td><td>No ✅</td><td>No ✅</td></tr>
+          <tr><td>Works for categorical</td><td>No</td><td>No</td><td>Yes ✅</td></tr>
+          <tr><td>Unique</td><td>Always</td><td>Always</td><td>Not always</td></tr>
+          <tr><td>Uses all values</td><td>Yes ✅</td><td>No</td><td>No</td></tr>
+        </table>
+      </div>
+      <div>
+        <div class="sl">When to use Mean</div>
+        <ul class="pts">
+          <li>Data is <strong>symmetric</strong>, no extreme outliers</li>
+          <li>Calculating further statistics (variance, etc.)</li>
+          <li>Test scores, heights, temperatures</li>
+        </ul>
+        <div class="sl" style="margin-top:10px;">When to use Median</div>
+        <ul class="pts">
+          <li>Data is <strong>skewed</strong> or has outliers</li>
+          <li>Income, house prices, wait times</li>
+          <li>Ordinal data (rankings)</li>
+        </ul>
+      </div>
+      <div>
+        <div class="sl">Skewness &amp; Central Tendency</div>
+        <ul class="pts">
+          <li><strong>Symmetric</strong>: Mean = Median = Mode</li>
+          <li><strong>Right skew</strong>: Mode &lt; Median &lt; Mean</li>
+          <li><strong>Left skew</strong>: Mean &lt; Median &lt; Mode</li>
+        </ul>
+        <div class="fbox" style="margin-top:10px;">
+          Right skew: long tail → right<br>
+          e.g. income, reaction times<br><br>
+          Left skew: long tail → left<br>
+          e.g. age at retirement
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ §2 VARIANCE & STANDARD DEVIATION ═══ -->
+<div class="section-header">
+  <div class="sh-line"></div>
+  <div class="sh-label sh-c4">§2 · Variance &amp; Standard Deviation</div>
+  <div class="sh-line"></div>
+</div>
+
+<div class="grid3">
+
+  <!-- VARIANCE -->
+  <div class="card c4">
+    <div class="card-top"><span class="badge">Squared Spread</span><span class="tag-chip">σ²</span></div>
+    <div class="card-title">📐 <span class="accent">Variance</span> — Average Squared Deviation</div>
+    <hr class="div">
+    <p class="def">Measures how far each value is from the mean, on average. Squares the deviations so negatives don't cancel out.</p>
+    <div class="sl">Step-by-Step · Dataset: 2, 4, 4, 4, 5, 5, 7, 9 · Mean = 5</div>
+    <div class="fbox">
+      Deviations:  (2-5)²=9  (4-5)²=1  (4-5)²=1<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(4-5)²=1  (5-5)²=0  (5-5)²=0<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(7-5)²=4  (9-5)²=16<br>
+      Sum = 9+1+1+1+0+0+4+16 = <span class="hi">32</span><br>
+      <span class="hi">σ² (pop) = 32 / 8 = 4.0</span><br>
+      s²  (sample) = 32 / 7 ≈ 4.57
+    </div>
+    <div class="sl">Formulas</div>
+    <div class="fbox">
+      <span class="hi">σ² = Σ(xᵢ − μ)² / N</span>  ← population<br>
+      s²  = Σ(xᵢ − x̄)² / (n−1)  ← sample<br>
+      <span class="cm">n−1: Bessel's correction for unbiased estimate</span>
+    </div>
+    <ul class="pts" style="margin-top:8px;">
+      <li>Units are <strong>squared</strong> (e.g. cm²) — hard to interpret</li>
+      <li>Large variance = data is widely spread</li>
+    </ul>
+  </div>
+
+  <!-- STD DEV -->
+  <div class="card c4">
+    <div class="card-top"><span class="badge">Same Units</span><span class="tag-chip">σ</span></div>
+    <div class="card-title">📏 <span class="accent">Standard Deviation</span> — Root of Variance</div>
+    <hr class="div">
+    <p class="def">The square root of variance. Returns spread to the <strong>same units</strong> as the data — much easier to interpret than variance.</p>
+    <div class="fbox">
+      From above: σ² = 4.0<br>
+      <span class="hi">σ = √4.0 = 2.0</span><br><br>
+      Interpretation: values are on average<br>
+      ±2.0 units away from the mean (5.0)
+    </div>
+    <div class="sl">Formulas</div>
+    <div class="fbox">
+      <span class="hi">σ  = √( Σ(xᵢ−μ)² / N )</span>   ← population<br>
+      s   = √( Σ(xᵢ−x̄)² / (n−1) )  ← sample
+    </div>
+    <div class="sl">Empirical Rule (Normal Distribution)</div>
+    <ul class="pts">
+      <li><strong>μ ± 1σ</strong> contains ≈ <strong>68%</strong> of data</li>
+      <li><strong>μ ± 2σ</strong> contains ≈ <strong>95%</strong> of data</li>
+      <li><strong>μ ± 3σ</strong> contains ≈ <strong>99.7%</strong> of data</li>
+    </ul>
+  </div>
+
+  <!-- Population vs Sample -->
+  <div class="card c4">
+    <div class="card-top"><span class="badge">Key Distinction</span><span class="tag-chip">N vs n−1</span></div>
+    <div class="card-title">👥 <span class="accent">Population vs Sample</span> Statistics</div>
+    <hr class="div">
+    <p class="def">Population stats describe the entire group. Sample stats estimate the population from a subset. Use n−1 (Bessel's correction) for unbiased sample estimates.</p>
+    <table class="ctable">
+      <tr><th></th><th>Population</th><th>Sample</th></tr>
+      <tr><td>Symbol (mean)</td><td>μ</td><td>x̄</td></tr>
+      <tr><td>Symbol (std)</td><td>σ</td><td>s</td></tr>
+      <tr><td>Symbol (var)</td><td>σ²</td><td>s²</td></tr>
+      <tr><td>Denominator</td><td>N</td><td>n − 1</td></tr>
+      <tr><td>Use when</td><td>Full data</td><td>Subset only</td></tr>
+    </table>
+    <div class="fbox" style="margin-top:10px;">
+      <span class="cm"># Why n−1?</span><br>
+      Sample tends to underestimate spread.<br>
+      Dividing by (n−1) corrects this bias.<br>
+      As n→∞, n−1 ≈ n (same result)
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ═══ §3 MEASURES OF SPREAD ═══ -->
+<div class="section-header">
+  <div class="sh-line"></div>
+  <div class="sh-label sh-c3">§3 · Measures of Spread &amp; Position</div>
+  <div class="sh-line"></div>
+</div>
+
+<div class="grid4">
+
+  <!-- RANGE -->
+  <div class="card c3">
+    <div class="card-top"><span class="badge">Simplest</span><span class="tag-chip">Max − Min</span></div>
+    <div class="card-title">↔️ <span class="accent">Range</span></div>
+    <hr class="div">
+    <p class="def">Difference between max and min value. Easiest spread measure but very sensitive to outliers.</p>
+    <div class="ex-row" style="margin-bottom:6px;">
+      <div class="ex-num special">2</div><div class="ex-num">4</div><div class="ex-num">4</div><div class="ex-num">4</div>
+      <div class="ex-num">5</div><div class="ex-num">5</div><div class="ex-num">7</div><div class="ex-num special">9</div>
+    </div>
+    <div class="fbox">
+      <span class="hi">Range = Max − Min</span><br>
+      = 9 − 2 = <span class="hi">7</span>
+    </div>
+    <ul class="pts" style="margin-top:8px;">
+      <li>Simple but <strong>ignores all middle values</strong></li>
+      <li>One outlier can distort it completely</li>
+    </ul>
+  </div>
+
+  <!-- IQR -->
+  <div class="card c3">
+    <div class="card-top"><span class="badge">Robust</span><span class="tag-chip">Q3 − Q1</span></div>
+    <div class="card-title">📦 <span class="accent">IQR</span> — Interquartile Range</div>
+    <hr class="div">
+    <p class="def">Range of the middle 50% of data. Resistant to outliers. Used in box plots to detect outliers.</p>
+    <div class="fbox">
+      Sorted: 2, 4, 4 | <span class="hi">4, 5</span> | 5, 7, 9<br>
+      Q1 (25th %) = 4<br>
+      Q3 (75th %) = 6<br>
+      <span class="hi">IQR = Q3 − Q1 = 6 − 4 = 2</span>
+    </div>
+    <div class="sl">Outlier Rule</div>
+    <div class="fbox">
+      Lower fence = Q1 − 1.5·IQR<br>
+      Upper fence = Q3 + 1.5·IQR<br>
+      Values outside = <span class="hi">outliers</span>
+    </div>
+  </div>
+
+  <!-- QUARTILES -->
+  <div class="card c3">
+    <div class="card-top"><span class="badge">Percentiles</span><span class="tag-chip">5-Number Summary</span></div>
+    <div class="card-title">🎯 <span class="accent">Quartiles</span> &amp; Percentiles</div>
+    <hr class="div">
+    <p class="def">Quartiles split sorted data into 4 equal parts. The 5-number summary fully describes a distribution's shape.</p>
+    <div class="fbox">
+      <span class="hi">Q1</span> = 25th percentile (lower quartile)<br>
+      <span class="hi">Q2</span> = 50th percentile = Median<br>
+      <span class="hi">Q3</span> = 75th percentile (upper quartile)<br><br>
+      5-Number Summary:<br>
+      <span class="hi">Min, Q1, Median, Q3, Max</span>
+    </div>
+    <ul class="pts" style="margin-top:8px;">
+      <li>P90 = 90th percentile → 90% of data below</li>
+      <li>Box plot visualizes the 5-number summary</li>
+    </ul>
+  </div>
+
+  <!-- CV -->
+  <div class="card c3">
+    <div class="card-top"><span class="badge">Relative</span><span class="tag-chip">Scale-free</span></div>
+    <div class="card-title">📊 <span class="accent">Coefficient of Variation</span></div>
+    <hr class="div">
+    <p class="def">Std dev expressed as a % of the mean. Allows comparing spread across datasets with different units or scales.</p>
+    <div class="fbox">
+      <span class="hi">CV = (σ / μ) × 100%</span><br><br>
+      Example A: μ=100, σ=10 → CV=10%<br>
+      Example B: μ=5,   σ=2  → CV=40%<br>
+      B is relatively <span class="hi">more spread out</span>
+    </div>
+    <ul class="pts" style="margin-top:8px;">
+      <li>Useful for comparing risk in finance</li>
+      <li>Only valid when mean &gt; 0</li>
+    </ul>
+  </div>
+
+</div>
+
+<!-- ═══ §4 Z-SCORE & PYTHON ═══ -->
+<div class="section-header">
+  <div class="sh-line"></div>
+  <div class="sh-label sh-c2">§4 · Z-Score &amp; Python Implementation</div>
+  <div class="sh-line"></div>
+</div>
+
+<div class="grid3">
+
+  <!-- Z-SCORE -->
+  <div class="card c2">
+    <div class="card-top"><span class="badge">Standardize</span><span class="tag-chip">How far from mean?</span></div>
+    <div class="card-title">🎯 <span class="accent">Z-Score</span> — Standard Score</div>
+    <hr class="div">
+    <p class="def">How many standard deviations a value is from the mean. Standardizes data to a common scale regardless of units.</p>
+    <div class="fbox">
+      <span class="hi">z = (x − μ) / σ</span><br><br>
+      Dataset μ=5, σ=2 · x=9:<br>
+      z = (9 − 5) / 2 = <span class="hi">+2.0</span><br>
+      → 9 is 2 std devs above the mean<br><br>
+      z = 0   → exactly at the mean<br>
+      z = +1  → 1 std dev above<br>
+      z = −2  → 2 std devs below<br>
+      |z| &gt; 2 → potential outlier
+    </div>
+    <ul class="pts" style="margin-top:8px;">
+      <li>After z-scoring: μ=0, σ=1 for any dataset</li>
+      <li>Used in normalization before ML models</li>
+      <li>Converts any normal distribution to standard normal</li>
+    </ul>
+  </div>
+
+  <!-- NUMPY -->
+  <div class="card c2">
+    <div class="card-top"><span class="badge">NumPy</span><span class="tag-chip">numpy / scipy</span></div>
+    <div class="card-title">🐍 <span class="accent">Python</span> — NumPy &amp; SciPy</div>
+    <hr class="div">
+    <div class="fbox">
+<span class="kw">import</span> numpy <span class="kw">as</span> np<br>
+<span class="kw">from</span> scipy <span class="kw">import</span> stats<br>
+<br>
+data = [<span class="nm">2</span>, <span class="nm">4</span>, <span class="nm">4</span>, <span class="nm">4</span>, <span class="nm">5</span>, <span class="nm">5</span>, <span class="nm">7</span>, <span class="nm">9</span>]<br>
+<br>
+<span class="cm"># Central Tendency</span><br>
+np.<span class="fn">mean</span>(data)       <span class="cm"># → 5.0</span><br>
+np.<span class="fn">median</span>(data)     <span class="cm"># → 4.5</span><br>
+stats.<span class="fn">mode</span>(data).mode <span class="cm"># → 4</span><br>
+<br>
+<span class="cm"># Spread</span><br>
+np.<span class="fn">var</span>(data)        <span class="cm"># population var → 4.0</span><br>
+np.<span class="fn">var</span>(data, ddof=<span class="nm">1</span>) <span class="cm"># sample var → 4.57</span><br>
+np.<span class="fn">std</span>(data)        <span class="cm"># population σ → 2.0</span><br>
+np.<span class="fn">std</span>(data, ddof=<span class="nm">1</span>) <span class="cm"># sample s → 2.14</span><br>
+np.<span class="fn">ptp</span>(data)        <span class="cm"># range → 7</span><br>
+np.<span class="fn">percentile</span>(data, [<span class="nm">25</span>,<span class="nm">50</span>,<span class="nm">75</span>])<br>
+<br>
+<span class="cm"># Z-scores</span><br>
+stats.<span class="fn">zscore</span>(data)   <span class="cm"># all z-scores</span>
+    </div>
+  </div>
+
+  <!-- PANDAS -->
+  <div class="card c2">
+    <div class="card-top"><span class="badge">Pandas</span><span class="tag-chip">DataFrame</span></div>
+    <div class="card-title">🐼 <span class="accent">Python</span> — Pandas</div>
+    <hr class="div">
+    <div class="fbox">
+<span class="kw">import</span> pandas <span class="kw">as</span> pd<br>
+<br>
+df = pd.<span class="cl">DataFrame</span>({<span class="st">'values'</span>: data})<br>
+<br>
+<span class="cm"># Full summary in one line!</span><br>
+df.<span class="fn">describe</span>()<br>
+<span class="cm"># → count, mean, std, min,</span><br>
+<span class="cm">#   25%, 50%, 75%, max</span><br>
+<br>
+df[<span class="st">'values'</span>].<span class="fn">mean</span>()<br>
+df[<span class="st">'values'</span>].<span class="fn">median</span>()<br>
+df[<span class="st">'values'</span>].<span class="fn">mode</span>()[<span class="nm">0</span>]<br>
+df[<span class="st">'values'</span>].<span class="fn">var</span>()  <span class="cm"># ddof=1 default</span><br>
+df[<span class="st">'values'</span>].<span class="fn">std</span>()  <span class="cm"># ddof=1 default</span><br>
+df[<span class="st">'values'</span>].<span class="fn">quantile</span>(<span class="nm">0.25</span>)<br>
+<br>
+<span class="cm"># IQR</span><br>
+q1 = df[<span class="st">'values'</span>].<span class="fn">quantile</span>(<span class="nm">0.25</span>)<br>
+q3 = df[<span class="st">'values'</span>].<span class="fn">quantile</span>(<span class="nm">0.75</span>)<br>
+iqr = q3 - q1
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ §5 QUICK REFERENCE ═══ -->
+<div class="section-header">
+  <div class="sh-line"></div>
+  <div class="sh-label sh-c5">§5 · Quick Reference Summary</div>
+  <div class="sh-line"></div>
+</div>
+
+<div class="grid4">
+
+  <div class="card c5">
+    <div class="card-top"><span class="badge">All Formulas</span></div>
+    <div class="card-title">∑ <span class="accent">Formula</span> Sheet</div>
+    <hr class="div">
+    <div class="fbox">
+      <span class="hi">Mean:    μ = Σxᵢ / N</span><br>
+      <span class="hi">Median:</span> middle value (sorted)<br>
+      <span class="hi">Mode:</span>   most frequent value<br>
+      <span class="hi">Range:  Max − Min</span><br>
+      <span class="hi">IQR:    Q3 − Q1</span><br>
+      <span class="hi">Var:    σ² = Σ(xᵢ−μ)²/N</span><br>
+      <span class="hi">Std:    σ = √σ²</span><br>
+      <span class="hi">CV:     σ/μ × 100%</span><br>
+      <span class="hi">Z:      (x − μ) / σ</span>
+    </div>
+  </div>
+
+  <div class="card c5">
+    <div class="card-top"><span class="badge">Decision Guide</span></div>
+    <div class="card-title">🧭 <span class="accent">Which Measure</span> to Use?</div>
+    <hr class="div">
+    <ul class="pts">
+      <li><strong>Symmetric data</strong> → Mean + Std Dev</li>
+      <li><strong>Skewed data</strong> → Median + IQR</li>
+      <li><strong>Categorical</strong> → Mode only</li>
+      <li><strong>Outliers present</strong> → Median + IQR</li>
+      <li><strong>Comparing datasets</strong> → CV (coefficient of variation)</li>
+      <li><strong>Normalization</strong> → Z-score</li>
+      <li><strong>Box plot</strong> → 5-number summary</li>
+    </ul>
+  </div>
+
+  <div class="card c5">
+    <div class="card-top"><span class="badge">Interpretation</span></div>
+    <div class="card-title">💬 <span class="accent">Interpreting</span> Spread</div>
+    <hr class="div">
+    <ul class="pts">
+      <li>Small σ → data clustered near mean</li>
+      <li>Large σ → data widely scattered</li>
+      <li>σ = 0 → all values are identical</li>
+      <li>IQR small → middle 50% is tightly grouped</li>
+      <li>IQR large → high spread in central data</li>
+    </ul>
+    <div class="fbox" style="margin-top:8px;">
+      Low spread:  2, 3, 3, 4, 4  σ≈0.8<br>
+      High spread: 1, 3, 5, 7, 9  σ≈2.8
+    </div>
+  </div>
+
+  <div class="card c5">
+    <div class="card-top"><span class="badge">Outlier Detection</span></div>
+    <div class="card-title">🚨 <span class="accent">Detecting</span> Outliers</div>
+    <hr class="div">
+    <ul class="pts">
+      <li><strong>Z-score method</strong>: |z| &gt; 2 or 3 = outlier</li>
+      <li><strong>IQR method</strong>: outside Q1−1.5·IQR or Q3+1.5·IQR</li>
+      <li>Box plot whiskers show IQR fences</li>
+      <li>Outliers inflate Mean and Std Dev</li>
+    </ul>
+    <div class="fbox" style="margin-top:8px;">
+      <span class="cm"># IQR outlier detection</span><br>
+      lower = Q1 - <span class="nm">1.5</span>*IQR<br>
+      upper = Q3 + <span class="nm">1.5</span>*IQR<br>
+      outliers = df[(df&lt;lower)|(df&gt;upper)]
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-note">Descriptive Statistics · Mean · Median · Mode · Variance · Std Dev · Spread · Z-Score</div>
+  <div class="footer-badge">datacamp · descriptive statistics cheat sheet</div>
+</div>
+
+</body>
+</html>
